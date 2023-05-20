@@ -6,7 +6,6 @@
         </p>
     </div>
 
-
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -77,14 +76,36 @@
             </div>
         </div>
 
-        <!-- Teacher Form -->
+        <!-- class -->
+        <div class="mt-4">
+            <x-input-label for="class" :value="__('Class')" />
+            <select id="class" name="class" class="block mt-1 w-full rounded-md shadow-sm p-2" required>
+                @foreach ($classes as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('class')" class="mt-2" />
+        </div>
+
+        <!-- Qualifications -->
         <div id="teacher-form" style="display: none;">
-            <!-- Qualifications Address -->
             <div class="mt-4">
                 <x-input-label for="qualifications" :value="__('Qualifications')" />
                 <textarea id="qualifications" class="block mt-1 w-full" name="qualifications" :value="old('qualifications')" required></textarea>
                 <x-input-error :messages="$errors->get('qualifications')" class="mt-2" />
             </div>
+        </div>
+
+        <!-- Subjects -->
+        <div class="mt-4">
+            <x-input-label for="subjects" :value="__('Subjects')" />
+            <select id="subjects" name="subjects[]" multiple class="block mt-1 w-full rounded-md shadow-sm p-2"
+                required>
+                @foreach ($subjects as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('subjects')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">

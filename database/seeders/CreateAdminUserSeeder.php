@@ -23,13 +23,12 @@ class CreateAdminUserSeeder extends Seeder
             'last_name' => 'Bhagya',
             'email' => 'sarada@axus.lk',
             'dob' => '2023-05-02',
+            'status' => true,
+            'class' => null,
             'password' => bcrypt('sarada@123'),
             'email_verified_at' => Carbon::now(),
         ]);
 
-        $roles = Role::all();
-        foreach ($roles as $role) {
-            $superAdmin->assignRole([$role->id]);
-        }
+        $superAdmin->assignRole([1]);
     }
 }

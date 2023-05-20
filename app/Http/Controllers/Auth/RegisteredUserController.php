@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\AssignSubjects;
 use App\Http\Controllers\Controller;
+use App\Models\Lov;
+use App\Models\Subject;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -20,7 +23,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $subjects = Subject::active()->pluck('name', 'id');
+        $classes = Lov::where('lov_category_id', 1)->pluck('name', 'id');
+        return view('auth.register', compact('subjects', 'classes'));
     }
 
     /**
@@ -34,6 +39,8 @@ class RegisteredUserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'role' => ['required'],
+            'dob' => ['required'],
+            'class' => ['required'],
             'qualifications' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -42,15 +49,17 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'qualifications' => $request->qualifications,
             'email' => $request->email,
+            'dob' => $request->dob,
+            'class' => $request->class,
+            'qualifications' => $request->qualifications,
             'password' => Hash::make($request->password),
         ]);
 
+        AssignSubjects::run($user, $request->role, $request->subjects);
+
         event(new Registered($user));
-
         Auth::login($user);
-
         return redirect(RouteServiceProvider::HOME);
     }
 }
