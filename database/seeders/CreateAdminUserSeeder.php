@@ -26,5 +26,10 @@ class CreateAdminUserSeeder extends Seeder
             'password' => bcrypt('sarada@123'),
             'email_verified_at' => Carbon::now(),
         ]);
+
+        $roles = Role::all();
+        foreach ($roles as $role) {
+            $superAdmin->assignRole([$role->id]);
+        }
     }
 }
