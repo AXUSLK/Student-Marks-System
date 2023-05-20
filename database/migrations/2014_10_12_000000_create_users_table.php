@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->dateTime('dob');
+            $table->text('qualifications')->nullable();
             $table->string('email')->unique();
+            $table->boolean('status')->default(0);
+            $table->foreignId('class')->nullable()->constrained('lovs', 'id')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

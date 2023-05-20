@@ -40,24 +40,26 @@
                     @keydown.enter.prevent="open = false; focusButton()"
                     @keyup.space.prevent="open = false; focusButton()">
 
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700"
-                        :class="{ 'bg-gray-100': activeIndex === 3 }" role="menuitem" tabindex="-1"
-                        id="user-menu-item-1" @mouseenter="activeIndex = 3" @mouseleave="activeIndex = -1"
-                        @click="open = false; focusButton()">
-                        Profile
-                    </a>
+                    @if (Auth::check())
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700"
+                            :class="{ 'bg-gray-100': activeIndex === 3 }" role="menuitem" tabindex="-1"
+                            id="user-menu-item-1" @mouseenter="activeIndex = 3" @mouseleave="activeIndex = -1"
+                            @click="open = false; focusButton()">
+                            Profile
+                        </a>
 
-                    <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700"
-                        :class="{ 'bg-gray-100': activeIndex === 4 }" role="menuitem" tabindex="-1"
-                        id="user-menu-item-2" @mouseenter="activeIndex = 4" @mouseleave="activeIndex = -1"
-                        @click="open = false; focusButton()"
-                        onclick="event.preventDefault();
+                        <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700"
+                            :class="{ 'bg-gray-100': activeIndex === 4 }" role="menuitem" tabindex="-1"
+                            id="user-menu-item-2" @mouseenter="activeIndex = 4" @mouseleave="activeIndex = -1"
+                            @click="open = false; focusButton()"
+                            onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-                        Sign out
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                            Sign out
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    @endif
                 </div>
 
             </div>

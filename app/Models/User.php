@@ -23,6 +23,9 @@ class User extends Authenticatable
         'last_name',
         'email',
         'dob',
+        'class',
+        'status',
+        'qualifications',
         'password',
     ];
 
@@ -45,10 +48,50 @@ class User extends Authenticatable
         'dob' => 'datetime',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'status' => 'boolean',
     ];
 
     public function getNameAttribute()
     {
         return ($this->first_name . ' ' . $this->last_name);
+    }
+
+    public function scopeIsAdmin()
+    {
+        return $this->roles->contains('id', Role::ROLE_ADMIN);
+    }
+
+    public function scopeIsStudent()
+    {
+        return $this->roles->contains('id', Role::ROLE_STUDENT);
+    }
+
+    public function scopeIsTeacher()
+    {
+        return $this->roles->contains('id', Role::ROLE_TEACHER);
+    }
+
+    public function roleUser()
+    {
+        return $this->belongsToMany(Role::class, 'model_has_roles', 'role_id', 'model_id')
+            ->withTimestamps();
+    }
+
+    public function teacherSubject()
+    {
+        return $this->belongsToMany(Subject::class, 'subject_teacher', 'teacher_id', 'subject_id')
+            ->withTimestamps();
+    }
+
+    public function studentSubject()
+    {
+        return $this->belongsToMany(Subject::class, 'subject_student', 'student_id', 'subject_id')
+            ->withPivot(['mark', 'assignment'])
+            ->withTimestamps();
+    }
+
+    public function userClass()
+    {
+        return $this->hasOne(Lov::class, 'id', 'class');
     }
 }
